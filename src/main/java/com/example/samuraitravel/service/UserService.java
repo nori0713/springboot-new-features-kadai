@@ -11,12 +11,17 @@ import com.example.samuraitravel.form.UserEditForm;
 import com.example.samuraitravel.repository.RoleRepository;
 import com.example.samuraitravel.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+//@Slf4jを追加
+@Slf4j
 public class UserService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
-
+	
+	//コンストラクタ
 	public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
@@ -78,4 +83,12 @@ public class UserService {
 		User currentUser = userRepository.getReferenceById(userEditForm.getId());
 		return !userEditForm.getEmail().equals(currentUser.getEmail());
 	}
+	
+	// ユーザー名でユーザーを検索するメソッドを追加
+    public User findByUsername(String username) {
+    	
+    	// ログ出力処理を追加
+    	log.info("test");
+        return userRepository.findByUsername(username);
+    }
 }

@@ -8,5 +8,6 @@ import com.example.samuraitravel.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {	
     public User findByEmail(String email);
+    User findByUsername(String username);
      public Page<User> findByNameLikeOrFuriganaLike(String nameKeyword, String furiganaKeyword, Pageable pageable);
 }

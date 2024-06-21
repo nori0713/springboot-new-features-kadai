@@ -117,18 +117,16 @@
 										</div>
 									</div>
 								</div>
-
+								
 								<div sec:authorize="isAnonymous()" class="col-lg-4 px-0 ps-lg-4 mb-4">
 									<div class="card">
 										<div class="card-body">
 											<p class="card-text">予約するには<a th:href="@{/login}">ログイン</a>が必要です。</p>
-											<button type="submit"
-												class="btn text-white shadow-sm w-100 samuraitravel-btn"
-												disabled>予約する</button>
+											<button type="submit" class="btn text-white shadow-sm w-100 samuraitravel-btn" disabled>予約する</button>
 										</div>
 									</div>
 								</div>
-
+								
 								<div sec:authorize="isAuthenticated()" class="col-lg-4 px-0 ps-lg-4 mb-4">
 									<div class="card">
 										<div class="card-body">
@@ -161,6 +159,46 @@
 												</div>
 											</form>
 										</div>
+									</div>
+								</div>
+								
+								<!-- レビュー表示セクション -->
+								<div class="mt-4">
+									<h2 class="text-center">レビュー</h2>
+									
+									<!-- 未ログインの場合は「投稿する」ボタン非表示-->
+									
+									<!-- ログイン済みの人向け -->
+									<div sec:authorize="isAuthenticated()" class="d-flex justify-content-center">
+										<div class="card-body d-flex justify-content-center">
+											<a th:href="@{|/reviews/house/${house.id}/newReview|}" class="btn text-white shadow-sm w-50 samuraitravel-btn">レビューを投稿する</a>
+										</div>
+									</div>
+									<br>
+									<div class="text-center">
+										<div th:if="${reviews.isEmpty()}">
+											<p>レビューがありません。</p>
+										</div>
+									</div>
+									<div th:if="${!reviews.isEmpty()}" class="row">
+										<div th:each="review, iterStat : ${reviews}" th:if="${iterStat.index < 6}" class="col-md-6 mb-4">
+											<div class="card">
+												<div class="card-body">
+													<h5 class="card-title" th:text="${review.user.name}">ユーザー名</h5>
+													<div class="card-subtitle mb-2 text-muted">
+														<div class="stars-outer">
+															<span th:each="star : ${#numbers.sequence(1, 5)}"
+																th:classappend="${star <= review.reviewStar} ? 'filled' : ''">&#9733;</span>
+														</div>
+													</div>
+													<span th:text="${#dates.format(review.createdAt, 'yyyy年MM月dd日')}">日付</span>
+													<p class="card-text" th:text="${review.reviewText}">レビュー内容</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div th:if="${reviews.size() > 6}" class="text-center mt-4">
+										<a th:href="@{/reviews/house/__${house.getId()}__}" class="btn btn-link">すべてのレビューを見る</a>
 									</div>
 								</div>
 							</div>
