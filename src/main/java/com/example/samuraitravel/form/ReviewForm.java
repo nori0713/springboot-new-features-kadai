@@ -1,5 +1,7 @@
 package com.example.samuraitravel.form;
 
+import com.example.samuraitravel.entity.Review;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -17,8 +19,19 @@ public class ReviewForm {
     @Min(1)
     @Max(5)
     private Integer reviewStar;
+    
+    @NotNull
+    private Integer id;
+    
+    public ReviewForm() {}
 
-    // Getters and Setters
+    public ReviewForm(Review review) {
+        this.houseId = review.getHouse().getId();
+        this.reviewText = review.getReviewText();
+        this.reviewStar = review.getReviewStar();
+    }
+
+    // ゲッターとセッター
     public Integer getHouseId() {
         return houseId;
     }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.Review;
 import com.example.samuraitravel.entity.User;
 import com.example.samuraitravel.form.ReviewForm;
+import com.example.samuraitravel.security.UserDetailsImpl;
 import com.example.samuraitravel.service.HouseService;
 import com.example.samuraitravel.service.ReviewService;
 import com.example.samuraitravel.service.UserService;
@@ -45,18 +47,20 @@ public class ReviewController {
 	// 宿泊施設ごとのレビューを取得する
 	@GetMapping("/house/{houseId}")
 	public String getReviewsByHouseId(@PathVariable Integer houseId,
-			@RequestParam(defaultValue = "0") int page,
-			Model model) {
-		Pageable pageable = PageRequest.of(page, 10);
-		Page<Review> reviewPage = reviewService.getReviewsByHouseIdWithPagination(houseId, pageable);
-		House house = houseService.getHouseById(houseId);
+	                                  @RequestParam(defaultValue = "0") int page,
+	                                  Model model,
+	                                  @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+	    Pageable pageable = PageRequest.of(page, 10);
+	    Page<Review> reviewPage = reviewService.getReviewsByHouseIdWithPagination(houseId, pageable);
+	    House house = houseService.getHouseById(houseId);
 
-		model.addAttribute("reviewPage", reviewPage);
-		model.addAttribute("house", house);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", reviewPage.getTotalPages());
+	    model.addAttribute("reviewPage", reviewPage);
+	    model.addAttribute("house", house);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", reviewPage.getTotalPages());
+	    model.addAttribute("currentUser", userDetailsImpl.getUser()); // 追加
 
-		return "reviews/list";
+	    return "reviews/list";
 	}
 
 	// レビュー作成フォームを表示する
@@ -73,22 +77,21 @@ public class ReviewController {
 	// クラスの先頭にLoggerを追加
 	private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
 
-	// 新しいレビューを作成する
+	// 新しいレビューを作成する（修正後）
 	@PostMapping("/house/{houseId}")
 	public String createReview(@PathVariable Integer houseId,
-			@ModelAttribute @Valid ReviewForm reviewForm,
-			BindingResult result,
-			Principal principal,
-			Model model) {
-		if (result.hasErrors()) {
-			House house = houseService.getHouseById(houseId);
-			model.addAttribute("house", house);
-			return "reviews/createReview";
-		}
+	                           @ModelAttribute @Valid ReviewForm reviewForm,
+	                           BindingResult result,
+	                           @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+	                           Model model) {
+	    if (result.hasErrors()) {
+	        House house = houseService.getHouseById(houseId);
+	        model.addAttribute("house", house);
+	        return "reviews/createReview";
+	    }
 
-		String username = principal.getName();
-		logger.info("Logged in user: " + username);
-		User user = userService.findByUsername(username);
+	    User user = userDetailsImpl.getUser();
+	    logger.info("Logged in user: " + user.getUsername());
 
 //		if (user == null) {
 //			logger.error("User not found: " + username);
@@ -96,6 +99,7 @@ public class ReviewController {
 //			return "redirect:/login"; // もしくはエラーメッセージを表示
 //		}
 
+		// ReviewFormからReviewエンティティに変換して保存
 		Review review = new Review();
 		review.setHouseId(reviewForm.getHouseId());
 		review.setReviewText(reviewForm.getReviewText());
@@ -106,28 +110,45 @@ public class ReviewController {
 	}
 
 	// レビュー編集フォームを表示する
-	@GetMapping("/edit/{id}")
-	public String showEditForm(@PathVariable Integer id, Model model) {
-		Review review = reviewService.getReviewById(id);
-		model.addAttribute("review", review);
-		return "editReview";
-	}
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Integer id, Model model, Principal principal) {
+        Review review = reviewService.getReviewById(id);
+        String username = principal.getName();
+        if (!review.getUser().getUsername().equals(username)) {
+            return "redirect:/reviews/house/" + review.getHouse().getId();
+        }
+        model.addAttribute("reviewForm", new ReviewForm(review));
+        model.addAttribute("house", review.getHouse());
+        return "reviews/editReview";
+    }
 
-	// レビューを更新する
-	@PostMapping("/update/{id}")
-	public String updateReview(@PathVariable Integer id, @ModelAttribute Review updatedReview) {
-		reviewService.updateReview(id, updatedReview);
-		return "redirect:/reviews/house/" + updatedReview.getHouseId();
-	}
+ // レビューを更新する
+    @PostMapping("/update/{id}")
+    public String updateReview(@PathVariable Integer id, @ModelAttribute @Valid ReviewForm reviewForm, BindingResult result, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("house", reviewService.getReviewById(id).getHouse());
+            return "reviews/editReview";
+        }
+        User user = userDetailsImpl.getUser();
+        Review review = reviewService.getReviewById(id);
+        if (!review.getUser().getId().equals(user.getId())) {
+            return "redirect:/reviews/house/" + review.getHouse().getId();
+        }
+        reviewService.updateReview(id, reviewForm);
+        return "redirect:/reviews/house/" + review.getHouse().getId();
+    }
 
-	// レビューを削除する
-	@PostMapping("/delete/{id}")
-	public String deleteReview(@PathVariable Integer id) {
-		Review review = reviewService.getReviewById(id);
-		Integer houseId = review.getHouseId();
-		reviewService.deleteReview(id);
-		return "redirect:/reviews/house/" + houseId;
-	}
+    // レビューを削除する
+    @PostMapping("/delete/{id}")
+    public String deleteReview(@PathVariable Integer id, Principal principal) {
+        Review review = reviewService.getReviewById(id);
+        String username = principal.getName();
+        if (!review.getUser().getUsername().equals(username)) {
+            return "redirect:/reviews/house/" + review.getHouse().getId();
+        }
+        reviewService.deleteReview(id);
+        return "redirect:/reviews/house/" + review.getHouse().getId();
+    }
 
 	// コンストラクタ
 	public ReviewController(ReviewService reviewService, HouseService houseService, UserService userService) {

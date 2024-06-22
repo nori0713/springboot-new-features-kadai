@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.samuraitravel.entity.Review;
+import com.example.samuraitravel.form.ReviewForm;
 import com.example.samuraitravel.repository.ReviewRepository;
 
 @Service
@@ -41,12 +42,12 @@ public class ReviewService {
 
     // レビューを更新するメソッド
     @Transactional
-    public void updateReview(Integer id, Review updatedReview) {
+    public void updateReview(Integer id, ReviewForm reviewForm) {
         Optional<Review> existingReview = reviewRepository.findById(id);
         if (existingReview.isPresent()) {
             Review review = existingReview.get();
-            review.setReviewText(updatedReview.getReviewText());
-            review.setReviewStar(updatedReview.getReviewStar());
+            review.setReviewText(reviewForm.getReviewText());
+            review.setReviewStar(reviewForm.getReviewStar());
             reviewRepository.save(review);
         }
     }

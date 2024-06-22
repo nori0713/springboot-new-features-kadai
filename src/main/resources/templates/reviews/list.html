@@ -36,15 +36,49 @@
 							<div th:each="review, iterStat : ${reviewPage.content}" class="col">
 								<div class="card review-card">
 									<div class="card-body">
-										<h5 class="card-title" th:text="${review.user.name}">ユーザー名</h5>
+										<div class="d-flex justify-content-between">
+											<h5 class="card-title" th:text="${review.user.name}">ユーザー名</h5>
+											<div th:if="${principal != null}">
+												<div th:if="${review.user.username == principal.name}">
+													<a th:href="@{|/reviews/edit/${review.id}|}"
+														class="btn btn-link">編集</a>
+													<button type="button" class="btn btn-link text-danger"
+														data-bs-toggle="modal"
+														th:data-bs-target="${'#deleteModal-' + review.id}">削除</button>
+												</div>
+											</div>
+										</div>
 										<div class="card-subtitle mb-2 text-muted">
 											<div class="stars-outer">
 												<span th:each="star : ${#numbers.sequence(1, 5)}"
 													th:classappend="${star} <= ${review.reviewStar} ? 'filled' : ''">&#9733;</span>
 											</div>
-											<span th:text="${#dates.format(review.createdAt, 'yyyy年MM月dd日')}">日付</span>
 										</div>
+										<span th:text="${#dates.format(review.createdAt, 'yyyy年MM月dd日')}">日付</span>
 										<p class="card-text" th:text="${review.reviewText}">レビュー内容</p>
+									</div>
+									<!-- 削除モーダル -->
+									<div th:id="${'deleteModal-' + review.id}" class="modal fade" tabindex="-1"
+										aria-labelledby="exampleModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel">確認</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<p th:text="${house.name + 'のレビューを削除してもよろしいですか？'}"></p>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-bs-dismiss="modal">キャンセル</button>
+													<form th:action="@{|/reviews/delete/${review.id}|}" method="post">
+														<button type="submit" class="btn btn-danger">削除</button>
+													</form>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -94,6 +128,7 @@
 	</div>
 
 	<div th:replace="~{fragment :: scripts}"></div>
+
 </body>
 
 </html>
