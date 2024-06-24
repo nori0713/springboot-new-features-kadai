@@ -37,9 +37,9 @@
 								<div class="card review-card">
 									<div class="card-body">
 										<div class="d-flex justify-content-between">
-											<h5 class="card-title" th:text="${review.user.name}">ユーザー名</h5>
-											<div th:if="${principal != null}">
-												<div th:if="${review.user.username == principal.name}">
+											<h5 class="card-title" th:text="${review.user.username}">ユーザー名</h5>
+											<div sec:authorize="isAuthenticated()">
+												<div th:if="${review.user.id == #authentication.principal.user.id}">
 													<a th:href="@{|/reviews/edit/${review.id}|}"
 														class="btn btn-link">編集</a>
 													<button type="button" class="btn btn-link text-danger"
@@ -50,8 +50,8 @@
 										</div>
 										<div class="card-subtitle mb-2 text-muted">
 											<div class="stars-outer">
-												<span th:each="star : ${#numbers.sequence(1, 5)}"
-													th:classappend="${star} <= ${review.reviewStar} ? 'filled' : ''">&#9733;</span>
+												<span th:each="star, iterStat : ${#numbers.sequence(1, 5)}"
+													th:classappend="${star <= review.reviewStar ? 'filled' : ''}">&#9733;</span>
 											</div>
 										</div>
 										<span th:text="${#dates.format(review.createdAt, 'yyyy年MM月dd日')}">日付</span>

@@ -23,7 +23,7 @@ public class User {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "username")
+    @Column(nullable = false, unique = true)
     private String username; // 追加
 
     @Column(name = "name")
@@ -62,4 +62,13 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
+    
+ // ゲッターとセッター
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
