@@ -111,10 +111,10 @@ public class ReviewController {
 	public String showEditForm(@PathVariable Integer id, Model model, Principal principal) {
 	    Review review = reviewService.getReviewById(id);
 	    if (review == null) {
-	        return "redirect:/reviews/house";
+	        return "redirect:/reviews/house"; // レビューが見つからない場合、リダイレクト
 	    }
-	    if (principal == null || !review.getUser().getUsername().equals(principal.getName())) {
-	        return "redirect:/reviews/house/" + review.getHouse().getId();
+	    if (!review.getUser().getUsername().equals(principal.getName())) {
+	        return "redirect:/reviews/house/" + review.getHouse().getId(); // 編集権限がない場合、民宿詳細ページにリダイレクト
 	    }
 	    model.addAttribute("reviewForm", new ReviewForm(review));
 	    model.addAttribute("house", review.getHouse());

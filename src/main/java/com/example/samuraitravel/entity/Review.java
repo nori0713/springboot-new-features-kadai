@@ -47,15 +47,16 @@ public class Review {
 	private Timestamp updatedAt;
 	
 	@Override
-    public String toString() {
-        return "Review{" +
-                "id=" + id +
-                ", reviewText='" + reviewText + '\'' +
-                ", reviewStar=" + reviewStar +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
+	public String toString() {
+	    return "Review{" +
+	            "id=" + id +
+	            ", user=" + (user != null ? user.getUsername() : "null") +
+	            ", reviewText='" + reviewText + '\'' +
+	            ", reviewStar=" + reviewStar +
+	            ", createdAt=" + createdAt +
+	            ", updatedAt=" + updatedAt +
+	            '}';
+	}
 	
 	// ゲッターとセッター
     public Integer getId() {
