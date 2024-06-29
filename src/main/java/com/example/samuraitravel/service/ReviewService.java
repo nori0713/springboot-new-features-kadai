@@ -20,8 +20,14 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     // 宿泊施設IDに基づいてレビューを取得するメソッド（ページネーション対応）
+    @Transactional(readOnly = true)
     public Page<Review> getReviewsByHouseIdWithPagination(Integer houseId, Pageable pageable) {
-        return reviewRepository.findByHouseId(houseId, pageable);
+        Page<Review> reviews = reviewRepository.findByHouseId(houseId, pageable);
+        reviews.forEach(review -> {
+            review.getUser().getUsername(); // Force fetch user
+            review.getAccommodation().getName(); // Force fetch accommodation (house)
+        });
+        return reviews;
     }
 
     // 宿泊施設IDに基づいてレビューを取得するメソッド（ページネーションなし）

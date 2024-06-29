@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
 <head>
     <title th:text="${house.name} + ' レビュー編集'">レビュー編集</title>
     <div th:replace="~{fragment :: meta}"></div>
@@ -8,7 +7,6 @@
     <link rel="stylesheet" th:href="@{/css/reviews.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
 <body>
     <div class="samuraitravel-wrapper">
         <div th:replace="~{fragment :: header}"></div>
@@ -25,7 +23,7 @@
                             </ol>
                         </nav>
                         <h1 class="mb-4 text-center" th:text="${house.name} + ' レビュー編集'">レビュー編集</h1>
-                        <form th:action="@{|/reviews/update/${reviewForm.houseId}|}" th:object="${reviewForm}" method="post" class="review-form">
+                        <form th:action="@{|/reviews/update/${reviewForm.id}|}" th:object="${reviewForm}" method="post" class="review-form">
                             <div class="mb-3">
                                 <label for="reviewStar" class="form-label">評価</label>
                                 <select id="reviewStar" name="reviewStar" class="form-select star" required>
@@ -52,5 +50,4 @@
     </div>
     <div th:replace="~{fragment :: scripts}"></div>
 </body>
-
 </html>

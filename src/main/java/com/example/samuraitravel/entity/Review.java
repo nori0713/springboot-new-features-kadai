@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,11 +26,11 @@ public class Review {
 	@Column(name = "house_id", insertable = false, updatable = false)
     private Integer houseId; // 重複するカラムに insertable と updatable を false に設定
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", nullable = false)
     private House accommodation; // フィールド名を変更
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 	
@@ -44,6 +45,17 @@ public class Review {
 	
 	@Column(name = "updated_at", insertable = false, updatable = false)
 	private Timestamp updatedAt;
+	
+	@Override
+    public String toString() {
+        return "Review{" +
+                "id=" + id +
+                ", reviewText='" + reviewText + '\'' +
+                ", reviewStar=" + reviewStar +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 	
 	// ゲッターとセッター
     public Integer getId() {

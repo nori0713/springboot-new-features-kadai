@@ -56,4 +56,12 @@ public class House {
     @OneToMany(mappedBy = "accommodation")
     private List<Review> reviews;
     
+    @Override
+    public String toString() {
+        return "House{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+    
 }

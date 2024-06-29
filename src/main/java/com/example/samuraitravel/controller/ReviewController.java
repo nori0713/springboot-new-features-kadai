@@ -1,10 +1,7 @@
 package com.example.samuraitravel.controller;
 
-
 import java.security.Principal;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,8 +71,8 @@ public class ReviewController {
 		return "reviews/createReview";
 	}
 
-	// クラスの先頭にLoggerを追加
-	private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
+//	// クラスの先頭にLoggerを追加
+//	private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
 
 	// 新しいレビューを作成する（修正後）
 	@PostMapping("/house/{houseId}")
@@ -91,7 +88,7 @@ public class ReviewController {
 	    }
 
 	    User user = userDetailsImpl.getUser();
-	    logger.info("Logged in user: " + user.getUsername());
+//	    logger.info("Logged in user: " + user.getUsername());
 
 //		if (user == null) {
 //			logger.error("User not found: " + username);
@@ -108,19 +105,21 @@ public class ReviewController {
 		reviewService.createReview(review);
 		return "redirect:/reviews/house/" + houseId;
 	}
-
+	
 	// レビュー編集フォームを表示する
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Integer id, Model model, Principal principal) {
-        Review review = reviewService.getReviewById(id);
-        String username = principal.getName();
-        if (!review.getUser().getUsername().equals(username)) {
-            return "redirect:/reviews/house/" + review.getHouse().getId();
-        }
-        model.addAttribute("reviewForm", new ReviewForm(review));
-        model.addAttribute("house", review.getHouse());
-        return "reviews/editReview";
-    }
+	@GetMapping("/edit/{id}")
+	public String showEditForm(@PathVariable Integer id, Model model, Principal principal) {
+	    Review review = reviewService.getReviewById(id);
+	    if (review == null) {
+	        return "redirect:/reviews/house";
+	    }
+	    if (principal == null || !review.getUser().getUsername().equals(principal.getName())) {
+	        return "redirect:/reviews/house/" + review.getHouse().getId();
+	    }
+	    model.addAttribute("reviewForm", new ReviewForm(review));
+	    model.addAttribute("house", review.getHouse());
+	    return "reviews/editReview";
+	}
 
  // レビューを更新する
     @PostMapping("/update/{id}")

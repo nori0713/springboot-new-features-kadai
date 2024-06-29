@@ -39,13 +39,11 @@
 										<div class="d-flex justify-content-between">
 											<h5 class="card-title" th:text="${review.user.username}">ユーザー名</h5>
 											<div sec:authorize="isAuthenticated()">
-												<div th:if="${review.user.id == #authentication.principal.user.id}">
-													<a th:href="@{|/reviews/edit/${review.id}|}"
-														class="btn btn-link">編集</a>
-													<button type="button" class="btn btn-link text-danger"
-														data-bs-toggle="modal"
-														th:data-bs-target="${'#deleteModal-' + review.id}">削除</button>
-												</div>
+											    <div th:if="${review.user.id == #authentication.principal.user.id}">
+											        <a th:href="@{|/reviews/edit/${review.id}|}" class="btn btn-link">編集</a>
+											        <button type="button" class="btn btn-link text-danger" data-bs-toggle="modal"
+											            th:data-bs-target="${'#deleteModal-' + review.id}">削除</button>
+											    </div>
 											</div>
 										</div>
 										<div class="card-subtitle mb-2 text-muted">
@@ -72,7 +70,8 @@
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary"
-														data-bs-dismiss="modal">キャンセル</button>
+														data-bs-dismiss="modal">キャンセル
+													</button>
 													<form th:action="@{|/reviews/delete/${review.id}|}" method="post">
 														<button type="submit" class="btn btn-danger">削除</button>
 													</form>
