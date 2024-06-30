@@ -23,14 +23,11 @@ public class Review {
 	@Column(name = "id")
 	private Integer id;
 	
-	@Column(name = "house_id", insertable = false, updatable = false)
-    private Integer houseId; // 重複するカラムに insertable と updatable を false に設定
-	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", nullable = false)
-    private House accommodation; // フィールド名を変更
-	
-	@ManyToOne(fetch = FetchType.LAZY)
+    private House house;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 	
@@ -65,14 +62,6 @@ public class Review {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public House getHouse() {
-        return accommodation;
-    }
-
-    public void setHouse(House house) {
-        this.accommodation = house;
     }
 
     public User getUser() {

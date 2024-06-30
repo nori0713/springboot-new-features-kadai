@@ -6,26 +6,28 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+@Data
 public class ReviewForm {
     
-    @NotNull
-    private Integer houseId;
+	private Integer id;
+	
+	@NotNull
+	private Integer houseId;
 
-    @NotBlank
-    private String reviewText;
+	@NotBlank
+	private String reviewText;
 
-    @NotNull
-    @Min(1)
-    @Max(5)
-    private Integer reviewStar;
-    
-    @NotNull
-    private Integer id;
-    
+	@NotNull
+	@Min(1)
+	@Max(5)
+	private Integer reviewStar;
+
     public ReviewForm() {}
 
     public ReviewForm(Review review) {
+    	this.id = review.getId();
         this.houseId = review.getHouse().getId();
         this.reviewText = review.getReviewText();
         this.reviewStar = review.getReviewStar();

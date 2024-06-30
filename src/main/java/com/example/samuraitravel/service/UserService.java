@@ -1,5 +1,7 @@
 package com.example.samuraitravel.service;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,6 +91,12 @@ public class UserService {
     	
     	// ログ出力処理を追加
     	log.info("test");
-        return userRepository.findByUsername(username);
+    	Optional<User> user = userRepository.findByUsername(username);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            System.out.println("User not found: " + username);
+            return null;
+        }
     }
 }
