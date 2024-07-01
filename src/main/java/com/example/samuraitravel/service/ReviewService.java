@@ -3,8 +3,6 @@ package com.example.samuraitravel.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,19 +37,9 @@ public class ReviewService {
 		return reviewRepository.findByUserId(userId);
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(ReviewService.class);
-
 	public Review getReviewById(Integer id) {
-        Optional<Review> review = reviewRepository.findById(id);
-        if (review.isPresent()) {
-            Review foundReview = review.get();
-            System.out.println("Loaded Review: " + foundReview.getId() + ", User: " + (foundReview.getUser() != null ? foundReview.getUser().getUsername() : "null"));
-            return foundReview;
-        } else {
-            System.out.println("Review not found: " + id);
-            return null;
-        }
-	}
+        return reviewRepository.findById(id).orElse(null);
+    }
 
 	@Transactional
 	public void updateReview(Integer id, ReviewForm reviewForm) {

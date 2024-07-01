@@ -25,7 +25,7 @@ public class HouseService {
     public House getHouseById(Integer houseId) {
     	return houseRepository.findById(houseId).orElse(null);
     }
-
+    
     @Transactional
     public void create(HouseRegisterForm houseRegisterForm) {
         House house = new House();

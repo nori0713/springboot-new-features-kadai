@@ -1,7 +1,6 @@
 package com.example.samuraitravel.service;
 
-import java.util.Optional;
-
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,16 +86,8 @@ public class UserService {
 	}
 	
 	// ユーザー名でユーザーを検索するメソッドを追加
-    public User findByUsername(String username) {
-    	
-    	// ログ出力処理を追加
-    	log.info("test");
-    	Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent()) {
-            return user.get();
-        } else {
-            System.out.println("User not found: " + username);
-            return null;
-        }
+	public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 }

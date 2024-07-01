@@ -95,17 +95,17 @@ public class ReviewController {
         reviewService.createReview(review);
         return "redirect:/reviews/house/" + houseId;
     }
-
-    @GetMapping("/reviews/edit/{id}")
+    
+    @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") Integer id, Model model, Principal principal) {
         Review review = reviewService.getReviewById(id);
         if (review == null) {
-            return "redirect:/reviews/house";
+            return "redirect:/reviews/list"; // レビューが見つからない場合、リダイレクト
         }
 
-        User reviewUser = review.getUser();
-        if (reviewUser == null || !reviewUser.getUsername().equals(principal.getName())) {
-            return "redirect:/reviews/house/" + review.getHouse().getId();
+        User currentUser = userService.findByUsername(principal.getName());
+        if (currentUser == null || review.getUser() == null || !review.getUser().getId().equals(currentUser.getId())) {
+            return "redirect:/reviews/list/" + review.getHouse().getId(); // 編集権限がない場合、民宿詳細ページにリダイレクト
         }
 
         model.addAttribute("reviewForm", new ReviewForm(review));
