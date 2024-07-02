@@ -24,9 +24,6 @@ public class User {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "username", nullable = false, unique = true)
-    private String username;
-
     @Column(name = "name")
     private String name;
 
@@ -64,12 +61,4 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Review> reviews;
     
- // ゲッターとセッター
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }

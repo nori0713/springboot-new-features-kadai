@@ -47,7 +47,7 @@ public class Review {
 	public String toString() {
 	    return "Review{" +
 	            "id=" + id +
-	            ", user=" + (user != null ? user.getUsername() : "null") +
+	             ", user=" + (user != null ? user : "null") +
 	            ", reviewText='" + reviewText + '\'' +
 	            ", reviewStar=" + reviewStar +
 	            ", createdAt=" + createdAt +

@@ -23,7 +23,6 @@ public class ReviewService {
 	public Page<Review> getReviewsByHouseIdWithPagination(Integer houseId, Pageable pageable) {
 		Page<Review> reviews = reviewRepository.findByHouseId(houseId, pageable);
 		reviews.forEach(review -> {
-			review.getUser().getUsername(); // Force fetch user
 			review.getHouse().getName(); // Force fetch house
 		});
 		return reviews;
