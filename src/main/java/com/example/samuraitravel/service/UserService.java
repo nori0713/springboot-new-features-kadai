@@ -1,5 +1,7 @@
 package com.example.samuraitravel.service;
 
+import java.util.Optional;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,11 +14,8 @@ import com.example.samuraitravel.form.UserEditForm;
 import com.example.samuraitravel.repository.RoleRepository;
 import com.example.samuraitravel.repository.UserRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
 //@Slf4jを追加
-@Slf4j
 public class UserService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
@@ -89,5 +88,10 @@ public class UserService {
 	public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                              .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    }
+	
+	public User findById(Integer id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.orElse(null);
     }
 }

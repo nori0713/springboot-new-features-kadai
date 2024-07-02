@@ -1,53 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-    <title th:text="${house.name} + ' レビュー編集'">レビュー編集</title>
-    <div th:replace="~{fragment :: meta}"></div>
-    <div th:replace="~{fragment :: styles}"></div>
-    <link rel="stylesheet" th:href="@{/css/reviews.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<title th:text="${house.name} + ' レビュー編集'">レビュー編集</title>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<link rel="stylesheet" th:href="@{/css/reviews.css}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-    <div class="samuraitravel-wrapper">
-        <div th:replace="~{fragment :: header}"></div>
-        <main>
-            <div class="container pt-4 pb-5 samuraitravel-container">
-                <div class="row justify-content-center">
-                    <div class="col-xxl-9 col-xl-10 col-lg-11">
-                        <nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                            <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
-                                <li class="breadcrumb-item"><a th:href="@{/houses}">民宿一覧</a></li>
-                                <li class="breadcrumb-item"><a th:href="@{|/houses/${house.id}|}">民宿詳細</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">レビュー編集</li>
-                            </ol>
-                        </nav>
-                        <h1 class="mb-4 text-center" th:text="${house.name} + ' レビュー編集'">レビュー編集</h1>
-                        <form th:action="@{|/reviews/update/${reviewForm.id}|}" th:object="${reviewForm}" method="post" class="review-form">
-                            <div class="mb-3">
-                                <label for="reviewStar" class="form-label">評価</label>
-                                <select id="reviewStar" name="reviewStar" class="form-select star" required>
-                                    <option value="1" th:selected="${reviewForm.reviewStar == 1}">★</option>
-                                    <option value="2" th:selected="${reviewForm.reviewStar == 2}">★★</option>
-                                    <option value="3" th:selected="${reviewForm.reviewStar == 3}">★★★</option>
-                                    <option value="4" th:selected="${reviewForm.reviewStar == 4}">★★★★</option>
-                                    <option value="5" th:selected="${reviewForm.reviewStar == 5}">★★★★★</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="reviewText" class="form-label">コメント</label>
-                                <textarea id="reviewText" name="reviewText" class="form-control" rows="5" required th:text="${reviewForm.reviewText}"></textarea>
-                            </div>
-                            <div class="submit-button text-center">
-                                <button type="submit" class="btn btn-primary">更新する</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </main>
-        <div th:replace="~{fragment :: footer}"></div>
-    </div>
-    <div th:replace="~{fragment :: scripts}"></div>
+	<div class="samuraitravel-wrapper">
+		<div th:replace="~{fragment :: header}"></div>
+		<main>
+			<div class="container pt-4 pb-5 samuraitravel-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/houses}">民宿一覧</a></li>
+								<li class="breadcrumb-item"><a th:href="@{|/houses/${house.id}|}">民宿詳細</a></li>
+								<li class="breadcrumb-item active" aria-current="page">レビュー編集</li>
+							</ol>
+						</nav>
+						<h1 class="mb-4 text-center" th:text="${house.name} + ' レビュー編集'">レビュー編集</h1>
+						<form th:action="@{|/reviews/update/${reviewForm.id}|}" th:object="${reviewForm}" method="post"
+							class="review-form">
+							<input type="hidden" th:field="*{houseId}" />
+							<div class="mb-3">
+								<label for="reviewStar" class="form-label">評価</label>
+								<select id="reviewStar" name="reviewStar" class="form-select star" required>
+									<option value="1" th:selected="${reviewForm.reviewStar == 1}">★</option>
+									<option value="2" th:selected="${reviewForm.reviewStar == 2}">★★</option>
+									<option value="3" th:selected="${reviewForm.reviewStar == 3}">★★★</option>
+									<option value="4" th:selected="${reviewForm.reviewStar == 4}">★★★★</option>
+									<option value="5" th:selected="${reviewForm.reviewStar == 5}">★★★★★</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="reviewText" class="form-label">コメント</label>
+								<textarea id="reviewText" name="reviewText" class="form-control" rows="5" required
+									th:text="${reviewForm.reviewText}"></textarea>
+							</div>
+							<div class="submit-button text-center">
+								<button type="submit" class="btn btn-primary">更新する</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</main>
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+	<div th:replace="~{fragment :: scripts}"></div>
 </body>
+
 </html>

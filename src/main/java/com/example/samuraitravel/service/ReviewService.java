@@ -43,14 +43,14 @@ public class ReviewService {
 
 	@Transactional
 	public void updateReview(Integer id, ReviewForm reviewForm) {
-		Optional<Review> existingReview = reviewRepository.findById(id);
-		if (existingReview.isPresent()) {
-			Review review = existingReview.get();
-			review.setReviewText(reviewForm.getReviewText());
-			review.setReviewStar(reviewForm.getReviewStar());
-			reviewRepository.save(review);
-		}
-	}
+        Optional<Review> optionalReview = reviewRepository.findById(id);
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+            review.setReviewText(reviewForm.getReviewText());
+            review.setReviewStar(reviewForm.getReviewStar());
+            reviewRepository.save(review);
+        }
+    }
 
 	@Transactional
 	public void deleteReview(Integer id) {
