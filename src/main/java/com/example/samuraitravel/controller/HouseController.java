@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.Review;
 import com.example.samuraitravel.form.ReservationInputForm;
 import com.example.samuraitravel.repository.HouseRepository;
+import com.example.samuraitravel.security.UserDetailsImpl;
 import com.example.samuraitravel.service.HouseService;
 import com.example.samuraitravel.service.ReviewService;
 
@@ -36,13 +38,24 @@ public class HouseController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable(name = "id") Integer id, Model model) {
-        House house = houseService.getHouseById(id);
-        List<Review> reviews = reviewService.getReviewsByHouseId(id);
-
+    public String showHouse(@PathVariable Integer id, Model model, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        House house = houseService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid house Id:" + id));
         model.addAttribute("house", house);
+
+        List<Review> reviews = reviewService.findReviewsByHouseId(id);
         model.addAttribute("reviews", reviews);
+
+        // reservationInputFormをモデルに追加
         model.addAttribute("reservationInputForm", new ReservationInputForm());
+
+        // ログインユーザーのレビューの存在を確認
+        if (userDetailsImpl != null) {
+        	Integer userId = userDetailsImpl.getId(); // ユーザーIDを取得
+            boolean hasReviewed = reviewService.hasUserReviewedHouse(userId, id);
+            model.addAttribute("hasReviewed", hasReviewed);
+        } else {
+            model.addAttribute("hasReviewed", false);
+        }
 
         return "houses/show";
     }

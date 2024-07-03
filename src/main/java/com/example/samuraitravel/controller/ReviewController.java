@@ -58,12 +58,16 @@ public class ReviewController {
 	    model.addAttribute("house", house);
 	    model.addAttribute("currentPage", page);
 	    model.addAttribute("totalPages", reviewPage.getTotalPages());
-	    
+
+	    boolean hasReviewed = false;
 	    if (userDetailsImpl != null) {
 	        model.addAttribute("currentUser", userDetailsImpl.getUser());
+	        hasReviewed = reviewService.hasUserReviewedHouse(userDetailsImpl.getUser().getId(), houseId.longValue());
 	    } else {
 	        model.addAttribute("currentUser", null);
 	    }
+
+	    model.addAttribute("hasReviewed", hasReviewed);
 
 	    return "reviews/list";
 	}

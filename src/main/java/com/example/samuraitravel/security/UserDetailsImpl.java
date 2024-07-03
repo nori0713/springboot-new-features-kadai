@@ -32,6 +32,10 @@ import com.example.samuraitravel.entity.User;
          return user.getEmail();
      }
      
+     public Integer getId() {
+         return user.getId();
+     }
+     
      // ロールのコレクションを返す
      @Override
      public Collection<? extends GrantedAuthority> getAuthorities() {

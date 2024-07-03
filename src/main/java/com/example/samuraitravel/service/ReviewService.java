@@ -28,6 +28,15 @@ public class ReviewService {
 		return reviews;
 	}
 
+	public List<Review> findReviewsByHouseId(Integer houseId) {
+        return reviewRepository.findByHouseId(houseId);
+    }
+
+    public boolean isReviewExist(Integer userId, Integer houseId) {
+        Optional<Review> review = reviewRepository.findByUserIdAndHouseId(userId, houseId);
+        return review.isPresent();
+    }
+
 	public List<Review> getReviewsByHouseId(Integer houseId) {
 		return reviewRepository.findByHouseId(houseId);
 	}
@@ -60,4 +69,10 @@ public class ReviewService {
 	public void createReview(Review review) {
 		reviewRepository.save(review);
 	}
+	
+	// ユーザーが特定の民宿に対して既にレビューを投稿しているかどうかを確認するメソッドを追加
+    public boolean hasUserReviewedHouse(Integer userId, long l) {
+        return reviewRepository.existsByUserIdAndHouseId(userId, l);
+    }
+
 }

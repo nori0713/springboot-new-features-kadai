@@ -224,6 +224,30 @@ footer {
     color: #ffb400;
 }
 
+.position-relative {
+    position: relative;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+.top-0 {
+    top: 0;
+}
+
+.end-0 {
+    right: 0;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.me-2 {
+    margin-right: 0.5rem;
+}
+
 @media screen and (min-width: 1400px) {
 	.samuraitravel-container {
 		max-width: 1200px;

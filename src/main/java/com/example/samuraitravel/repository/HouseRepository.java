@@ -1,6 +1,7 @@
 package com.example.samuraitravel.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +22,7 @@ public interface HouseRepository extends JpaRepository<House, Integer> {
     public Page<House> findAllByOrderByPriceAsc(Pageable pageable);
     
     public List<House> findTop10ByOrderByCreatedAtDesc();
+    
+    Optional<House> findById(Long id);
     
 }

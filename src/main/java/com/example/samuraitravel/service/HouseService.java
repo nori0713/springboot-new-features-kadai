@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,5 +92,9 @@ public class HouseService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public Optional<House> findById(Integer id) {
+        return houseRepository.findById(id);
     }
 }
