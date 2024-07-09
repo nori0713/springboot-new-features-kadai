@@ -3,135 +3,91 @@
 
 <head>
 	<div th:replace="~{fragment :: meta}"></div>
-
 	<div th:replace="~{fragment :: styles}"></div>
-
-	<!-- Flatpickr -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
 	<title>民宿詳細</title>
 </head>
 
 <body>
 	<div class="samuraitravel-wrapper">
-		<!-- ヘッダー -->
 		<div th:replace="~{fragment :: header}"></div>
-
 		<main>
 			<div class="container pt-4 pb-5 samuraitravel-container">
 				<div class="row justify-content-center">
 					<div class="col-xxl-9 col-xl-10 col-lg-11">
-						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+						<nav class="mb-4 d-flex justify-content-between align-items-center"
+							style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0">
 								<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
 								<li class="breadcrumb-item"><a th:href="@{/houses}">民宿一覧</a></li>
 								<li class="breadcrumb-item active" aria-current="page">民宿詳細</li>
 							</ol>
+							<div sec:authorize="isAuthenticated()">
+								<a th:if="${isFavorite}" th:href="@{|/favorites/remove/${house.id}|}"
+									class="text-danger">&#9829; お気に入り解除</a>
+								<a th:if="${!isFavorite}" th:href="@{|/favorites/add/${house.id}|}"
+									class="text-muted">&#9825; お気に入り追加</a>
+							</div>
 						</nav>
-
-						<h1 class="mb-4 text-center" th:text="${house.getName()}"></h1>
-
+						<h1 class="mb-4 text-center" th:text="${house.name}"></h1>
 						<div th:if="${errorMessage}" class="alert alert-danger">
 							<span th:text="${errorMessage}"></span>
 						</div>
-
 						<div class="mb-4">
-							<img th:if="${house.getImageName()}" th:src="@{/storage/__${house.getImageName()}__}"
+							<img th:if="${house.imageName != null}" th:src="@{/storage/__${house.imageName}__}"
 								class="w-100" alt="民宿画像">
-							<img th:unless="${house.getImageName()}" th:src="@{/images/noImage.png}" class="w-100"
+							<img th:unless="${house.imageName != null}" th:src="@{/images/noImage.png}" class="w-100"
 								alt="NO IMAGE">
 						</div>
-
 						<div class="container">
 							<div class="row">
 								<div class="col-lg-8 container mb-4">
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
-											<span class="fw-bold">民宿名</span>
-										</div>
-
-										<div class="col">
-											<span th:text="${house.getName()}"></span>
+										<div class="col-4"><span class="fw-bold">民宿名</span></div>
+										<div class="col"><span th:text="${house.name}"></span></div>
+									</div>
+									<div class="row pb-2 mb-2 border-bottom">
+										<div class="col-4"><span class="fw-bold">説明</span></div>
+										<div class="col"><span class="samuraitravel-pre-wrap"
+												th:text="${house.description}"></span></div>
+									</div>
+									<div class="row pb-2 mb-2 border-bottom">
+										<div class="col-4"><span class="fw-bold">宿泊料金</span></div>
+										<div class="col"><span
+												th:text="${#numbers.formatInteger(house.price, 1, 'COMMA') + '円'}"></span>
 										</div>
 									</div>
-
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
-											<span class="fw-bold">説明</span>
-										</div>
-
-										<div class="col">
-											<span class="samuraitravel-pre-wrap"
-												th:text="${house.getDescription()}"></span>
-										</div>
+										<div class="col-4"><span class="fw-bold">定員</span></div>
+										<div class="col"><span th:text="${house.capacity + '人'}"></span></div>
 									</div>
-
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
-											<span class="fw-bold">宿泊料金</span>
-										</div>
-
-										<div class="col">
-											<span
-												th:text="${#numbers.formatInteger(house.getPrice(), 1, 'COMMA') + '円'}"></span>
-										</div>
+										<div class="col-4"><span class="fw-bold">郵便番号</span></div>
+										<div class="col"><span th:text="${house.postalCode}"></span></div>
 									</div>
-
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
-											<span class="fw-bold">定員</span>
-										</div>
-
-										<div class="col">
-											<span th:text="${house.getCapacity() + '人'}"></span>
-										</div>
+										<div class="col-4"><span class="fw-bold">住所</span></div>
+										<div class="col"><span th:text="${house.address}"></span></div>
 									</div>
-
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
-											<span class="fw-bold">郵便番号</span>
-										</div>
-
-										<div class="col">
-											<span th:text="${house.getPostalCode()}"></span>
-										</div>
-									</div>
-
-									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
-											<span class="fw-bold">住所</span>
-										</div>
-
-										<div class="col">
-											<span th:text="${house.getAddress()}"></span>
-										</div>
-									</div>
-
-									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
-											<span class="fw-bold">電話番号</span>
-										</div>
-
-										<div class="col">
-											<span th:text="${house.getPhoneNumber()}"></span>
-										</div>
+										<div class="col-4"><span class="fw-bold">電話番号</span></div>
+										<div class="col"><span th:text="${house.phoneNumber}"></span></div>
 									</div>
 								</div>
-								
 								<div sec:authorize="isAnonymous()" class="col-lg-4 px-0 ps-lg-4 mb-4">
 									<div class="card">
 										<div class="card-body">
 											<p class="card-text">予約するには<a th:href="@{/login}">ログイン</a>が必要です。</p>
-											<button type="submit" class="btn text-white shadow-sm w-100 samuraitravel-btn" disabled>予約する</button>
+											<button type="submit"
+												class="btn text-white shadow-sm w-100 samuraitravel-btn"
+												disabled>予約する</button>
 										</div>
 									</div>
 								</div>
-								
 								<div sec:authorize="isAuthenticated()" class="col-lg-4 px-0 ps-lg-4 mb-4">
 									<div class="card">
 										<div class="card-body">
-											<form method="get"
-												th:action="@{/houses/__${house.getId()}__/reservations/input}"
+											<form method="get" th:action="@{/houses/__${house.id}__/reservations/input}"
 												th:object="${reservationInputForm}">
 												<div class="form-group mb-2">
 													<label for="fromCheckinDateToCheckoutDate"
@@ -142,7 +98,6 @@
 													<input type="text" class="form-control"
 														th:field="*{fromCheckinDateToCheckoutDate}">
 												</div>
-
 												<div class="form-group mb-4">
 													<label for="numberOfPeople"
 														class="col-form-label text-md-left fw-bold">宿泊人数</label>
@@ -152,7 +107,6 @@
 													<input type="number" class="form-control"
 														th:field="*{numberOfPeople}" min="1">
 												</div>
-
 												<div class="form-group">
 													<button type="submit"
 														class="btn text-white shadow-sm w-100 samuraitravel-btn">予約する</button>
@@ -161,35 +115,34 @@
 										</div>
 									</div>
 								</div>
-								
-								<!-- レビュー表示セクション -->
 								<div class="mt-4">
 									<h2 class="text-center">レビュー</h2>
-								
-									<!-- 未ログインの場合は「投稿する」ボタン非表示-->
-								
-									<!-- ログイン済みの人向け -->
 									<div sec:authorize="isAuthenticated()" class="d-flex justify-content-center">
 										<div class="card-body d-flex justify-content-center">
 											<a th:href="@{|/reviews/house/${house.id}/newReview|}"
-												class="btn text-white shadow-sm w-50 samuraitravel-btn" th:if="${!hasReviewed}">レビューを投稿する</a>
+												class="btn text-white shadow-sm w-50 samuraitravel-btn"
+												th:if="${!hasReviewed}">レビューを投稿する</a>
 										</div>
 									</div>
 									<br>
 									<div class="text-center">
-										<div th:if="${reviews.isEmpty()}">
+										<div th:if="${reviews == null || reviews.isEmpty()}">
 											<p>レビューがありません。</p>
 										</div>
 									</div>
-									<div th:if="${!reviews.isEmpty()}" class="row">
-										<div th:each="review, iterStat : ${reviews}" th:if="${iterStat.index < 6}" class="col-md-6 mb-4">
+									<div th:if="${reviews != null && !reviews.isEmpty()}" class="row">
+										<div th:each="review, iterStat : ${reviews}" th:if="${iterStat.index < 6}"
+											class="col-md-6 mb-4">
 											<div class="card">
 												<div class="card-body position-relative">
-													<!-- 編集・削除ボタン -->
-													<div sec:authorize="isAuthenticated()" class="position-absolute top-0 end-0 mt-2 me-2">
-														<div th:if="${review.user.id == #authentication.principal.user.id}">
-															<a th:href="@{|/reviews/edit/${review.id}|}" class="btn btn-link">編集</a>
-															<button type="button" class="btn btn-link text-danger" data-bs-toggle="modal"
+													<div sec:authorize="isAuthenticated()"
+														class="position-absolute top-0 end-0 mt-2 me-2">
+														<div
+															th:if="${review.user.id == #authentication.principal.user.id}">
+															<a th:href="@{|/reviews/edit/${review.id}|}"
+																class="btn btn-link">編集</a>
+															<button type="button" class="btn btn-link text-danger"
+																data-bs-toggle="modal"
 																th:data-bs-target="${'#deleteModal-' + review.id}">削除</button>
 														</div>
 													</div>
@@ -197,30 +150,33 @@
 													<div class="card-subtitle mb-2 text-muted">
 														<div class="stars-outer">
 															<span th:each="star : ${#numbers.sequence(1, 5)}"
-																th:classappend="${star <= review.reviewStar} ? 'filled' : ''">&#9733;</span>
+																th:classappend="${star <= review.reviewStar ? 'filled' : ''}">&#9733;</span>
 														</div>
 													</div>
-													<span th:text="${#dates.format(review.createdAt, 'yyyy年MM月dd日')}">日付</span>
+													<span
+														th:text="${#dates.format(review.createdAt, 'yyyy年MM月dd日')}">日付</span>
 													<p class="card-text" th:text="${review.reviewText}">レビュー内容</p>
 												</div>
-												<!-- 削除モーダル -->
-												<div th:id="${'deleteModal-' + review.id}" class="modal fade" tabindex="-1"
-													aria-labelledby="exampleModalLabel" aria-hidden="true">
+												<div th:id="${'deleteModal-' + review.id}" class="modal fade"
+													tabindex="-1" aria-labelledby="exampleModalLabel"
+													aria-hidden="true">
 													<div class="modal-dialog">
 														<div class="modal-content">
 															<div class="modal-header">
 																<h5 class="modal-title" id="exampleModalLabel">確認</h5>
-																<button type="button" class="btn-close" data-bs-dismiss="modal"
-																	aria-label="Close"></button>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
 															</div>
 															<div class="modal-body">
 																<p th:text="${house.name + 'のレビューを削除してもよろしいですか？'}"></p>
 															</div>
 															<div class="modal-footer">
-																<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル
-																</button>
-																<form th:action="@{|/reviews/delete/${review.id}|}" method="post">
-																	<button type="submit" class="btn btn-danger">削除</button>
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">キャンセル</button>
+																<form th:action="@{|/reviews/delete/${review.id}|}"
+																	method="post">
+																	<button type="submit"
+																		class="btn btn-danger">削除</button>
 																</form>
 															</div>
 														</div>
@@ -229,8 +185,9 @@
 											</div>
 										</div>
 									</div>
-									<div th:if="${reviews.size() > 6}" class="text-center mt-4">
-										<a th:href="@{/reviews/house/__${house.getId()}__}" class="btn btn-link">すべてのレビューを見る</a>
+									<div th:if="${reviews != null && reviews.size() > 6}" class="text-center mt-4">
+										<a th:href="@{/reviews/house/__${house.id}__}"
+											class="btn btn-link">すべてのレビューを見る</a>
 									</div>
 								</div>
 							</div>
@@ -239,14 +196,9 @@
 				</div>
 			</div>
 		</main>
-
-		<!-- フッター -->
 		<div th:replace="~{fragment :: footer}"></div>
 	</div>
-
 	<div th:replace="~{fragment :: scripts}"></div>
-
-	<!-- Flatpickr -->
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
 	<script th:src="@{/js/flatpickr.js}"></script>

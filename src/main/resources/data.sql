@@ -109,3 +109,27 @@ INSERT IGNORE INTO review (id, house_id, user_id, review_text, review_star) VALU
 INSERT IGNORE INTO review (id, house_id, user_id, review_text, review_star) VALUES (19, 1, 10, 'とてもいい宿でした。また行きたいです！！！', 5);
 INSERT IGNORE INTO review (id, house_id, user_id, review_text, review_star) VALUES (20, 1, 10, 'とてもいい宿でした。また行きたいです！！！', 5);
 INSERT IGNORE INTO review (id, house_id, user_id, review_text, review_star) VALUES (21, 1, 10, 'とてもいい宿でした。また行きたいです！！！', 5);
+
+-- favoriteテーブル
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (1, 1, 1);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (2, 1, 2);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (3, 2, 1);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (4, 2, 3);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (5, 3, 1);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (6, 3, 2);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (7, 3, 3);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (8, 4, 1);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (9, 4, 2);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (10, 4, 3);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (11, 5, 1);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (12, 2, 4);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (13, 2, 5);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (14, 2, 6);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (15, 2, 7);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (16, 2, 8);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (17, 2, 9);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (18, 2, 10);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (19, 2, 11);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (20, 2, 12);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (21, 2, 13);
+INSERT IGNORE INTO favorite (id, user_id, house_id) VALUES (22, 2, 14);

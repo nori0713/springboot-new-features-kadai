@@ -67,3 +67,29 @@ CREATE TABLE IF NOT EXISTS review (
    FOREIGN KEY (house_id) REFERENCES houses (id),
    FOREIGN KEY (user_id) REFERENCES users (id)
 );
+
+   -- favorite テーブルの作成
+CREATE TABLE IF NOT EXISTS favorite (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    house_id INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (house_id) REFERENCES houses (id)
+);
+
+-- 重複しているレコードを確認する
+SELECT user_id, house_id, COUNT(*)
+FROM favorite
+GROUP BY user_id, house_id
+HAVING COUNT(*) > 1;
+
+-- 重複レコードを削除する例
+DELETE FROM favorite
+WHERE id IN (
+    SELECT id FROM (
+        SELECT id, ROW_NUMBER() OVER (PARTITION BY user_id, house_id ORDER BY id) AS row_num
+        FROM favorite
+    ) t
+    WHERE t.row_num > 1
+);
